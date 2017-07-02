@@ -6,11 +6,13 @@
 #include <string.h>
 #include <iostream>
 #include <fstream>
-#include "vendor/getopt/getopt.h"
+//#include "vendor/getopt/getopt.h"
+#include <getopt.h>
 #include "settings.h"
 #include "iterator.h"
 #include "version.h"
 #include "cuda_code.h"
+#include <climits>
 
 const string help_string =
 "\r\nusage:\r\n"

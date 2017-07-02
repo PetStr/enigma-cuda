@@ -1,4 +1,8 @@
+#ifndef INI_FILE_ONLY_ONCE
+#define INI_FILE_ONLY_ONCE
+
 #pragma once
+
 #include <string>
 #include <vector>
 #include <map>
@@ -14,5 +18,7 @@ public:
   std::map<string, Entries> sections;
 
   IniFile(const string & file_name) { ReadFromFile(file_name); }
-  string ReadString(const string & section, const string & key, const string & default);
+  string ReadString(const string & section, const string & key, const string & default_);
 };
+
+#endif

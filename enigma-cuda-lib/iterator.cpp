@@ -5,7 +5,7 @@
 
 #include "iterator.h"
 #include "wiring.h"
-
+#include <stdexcept>
 
 const string key_range_starts[ENIGMA_MODEL_CNT]
     { "", "B:123:AA:XXX", "B:123:AA:XXX", "b:b123:AA:AXXX" };

@@ -1,0 +1,1 @@
+g++ -o ut -std=c++11 enigma-cuda.cpp ini_file.cpp iterator.cpp key.cpp ngrams.cpp plugboard.cpp runner.cpp segmenter.cpp settings.cpp util.cpp wiring.cpp cuda_code.o -L/usr/lib64 -L/usr/local/cuda-8.0/targets/x86_64-linux/lib/ -lcuda -lcudart

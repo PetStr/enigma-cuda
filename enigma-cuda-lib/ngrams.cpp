@@ -7,7 +7,7 @@
 #include "ngrams.h"
 #include "util.h"
 #include "key.h"
-
+#include <string.h>
 
 void FileErr(const string & msg, const string & file_name)
 {

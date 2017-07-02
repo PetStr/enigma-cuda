@@ -3,14 +3,23 @@
 /* file, You can obtain one at http ://mozilla.org/MPL/2.0/.           */
 /* Copyright (c) 2017 Alex Shovkoplyas VE3NEA                          */
 
+#include <time.h>
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <iostream>
 #include <iomanip>
+
+#ifdef WIN32
 #include <Windows.h>
-#include <ctime>
+#else
+#include <dirent.h>
+#endif
+
 #include "util.h"
+
+
 
 
 std::vector<int8_t> TextToNumbers(const string & text)
@@ -84,35 +93,39 @@ string LettersAndSpacesFromText(const string & text)
     return s.substr(0, dst);
 }
 
+
 string GetAbsolutePath(const string & file_name)
 {
 	char buf[256];
 	char* lppPart;
 
-	GetFullPathNameA((char*)file_name.c_str(),
-		256, &buf[0], &lppPart); (file_name);
+//	GetFullPathNameA((char*)file_name.c_str(),
+//		256, &buf[0], &lppPart); (file_name);
 	return buf;
 }
 
 string GetExeDir()
 {
   char buf[1024] = { 0 };
-  DWORD ret = GetModuleFileNameA(NULL, buf, sizeof(buf));
+  //DWORD ret = GetModuleFileNameA(NULL, buf, sizeof(buf));
   string result = buf;
   result = result.substr(0, result.find_last_of("\\/") + 1);
   return result;
 }
 
+
+
 string TimeString()
 {
   time_t t = std::time(nullptr);
   tm tt;
-  localtime_s(&tt, &t);
+  localtime(&t);
 
   std::ostringstream os;
   os << std::put_time(&tt, "%Y-%m-%d %H:%M:%S");
   return os.str();  
 }
+
 
 string TimeDiffString(clock_t clock)
 {
@@ -146,8 +159,12 @@ string UpperCase(const string & text)
 
 std::vector<string> ListFilesInDirectory(const string & directory)
 {
+	//This should not be here!. Added static.
+	static std::vector<string> result;
+
+#ifdef WIN32 
+ 
   WIN32_FIND_DATAA FindData;
-  std::vector<string> result;
 
   HANDLE hFind = FindFirstFileA((directory + "*.*").c_str(), &FindData);
   do 
@@ -158,9 +175,24 @@ std::vector<string> ListFilesInDirectory(const string & directory)
   while (FindNextFileA(hFind, &FindData));
   FindClose(hFind);
 
-  return result;
+#else
+   
+	DIR *dir;
+	struct dirent *ent;
+	if ((dir = opendir (directory.c_str())) != NULL) {
+		while ((ent = readdir (dir)) != NULL) {
+			if (string(ent->d_name) != "." && string(ent->d_name) != "..")
+				result.push_back(string(ent->d_name)); 
+			}
+		}
+	else 
+		std::cerr << "Unble to upen directory" << std::endl; 
+	closedir (dir);
+#endif
+	return result;
 }
-
+  
+/*
 void TextToClipboard(const std::string & text)
 {
   OpenClipboard(GetDesktopWindow());
@@ -173,6 +205,7 @@ void TextToClipboard(const std::string & text)
   CloseClipboard();
   GlobalFree(h);
 }
+*/
 
 bool FileExists(const string & file_name) 
 {
